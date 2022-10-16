@@ -29,15 +29,15 @@ const takePicture = async () => {
     }
   }
 
-const postImageApi = async (image) => {
-  // const apiData = await postImage(image);
-  let apiData={
-    "coupon_code": "ABCD",
-    "company": "ABC",
-    "text": "50% off"
-  }
-  console.log("api Data", apiData);
-  const inserted = await insert_doc(apiData.coupon_code, apiData.company, apiData.text);
+const postImageApi = (image) => {
+  const apiData = postImage(image);
+  // let apiData={
+  //   "coupon_code": "ABCD",
+  //   "company": "ABC",
+  //   "text": "50% off"
+  // }
+  console.log("api Data", image, apiData);
+  const inserted = insert_doc(apiData.coupon_code, apiData.company, apiData.text);
   console.log("Inserted", inserted);
   // if(inserted){
   //   navigation.navigate("Dashboard");
@@ -62,7 +62,7 @@ const postImageApi = async (image) => {
       </View>
        <Button title="Take Picture" onPress={() => takePicture()} />
         {image && <Image source={{uri: image}} style={{flex:1}}/>}
-        {image ? <Button title='Save' onPress={postImageApi(image)}/> : <View/>}
+        {image ? <Button title='Save' onPress={() => postImageApi(image)}/> : <View/>}
         {/* {image ? <Button title='navigate' onPress={() => navigation.navigate("Dashboard", {image: image})}/> : <View/>} */}
    </View>
   );
