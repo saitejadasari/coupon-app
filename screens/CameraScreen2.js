@@ -1,19 +1,18 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet ,Text, View, Button, Image} from 'react-native';
-import { Camera } from 'expo-camera';
-// import { withNavigationFocus } from 'react-navigation';
+import { Camera, CameraType } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import { postImage } from '../utils/apiCalls';
+import insert_doc from '../connections/query';
 
 
 function CameraScreen2({navigation}) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const isFocused = useIsFocused()
   console.log("focussed", isFocused);
-  console.log("image", image);
+  // console.log("image", image);
 
   useEffect(() => {
       (async () => {
@@ -31,8 +30,18 @@ const takePicture = async () => {
   }
 
 const postImageApi = async (image) => {
-  const apiData = await postImage(image);
+  // const apiData = await postImage(image);
+  let apiData={
+    "coupon_code": "ABCD",
+    "company": "ABC",
+    "text": "50% off"
+  }
   console.log("api Data", apiData);
+  const inserted = await insert_doc(apiData.coupon_code, apiData.company, apiData.text);
+  console.log("Inserted", inserted);
+  // if(inserted){
+  //   navigation.navigate("Dashboard");
+  // }
 }
 
   if (hasCameraPermission === false) {
@@ -46,24 +55,14 @@ const postImageApi = async (image) => {
           <Camera 
           ref={ref => setCamera(ref)}
           style={styles.fixedRatio} 
-          type={type}
+          type={CameraType.back}
           ratio={'1:1'} /> : <View />
         }
            
       </View>
-      <Button
-            title="Flip Image"
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}>
-        </Button>
        <Button title="Take Picture" onPress={() => takePicture()} />
         {image && <Image source={{uri: image}} style={{flex:1}}/>}
-        {image ? <Button title='Save' onPress={() => postImageApi(image)}/> : <View/>}
+        {image ? <Button title='Save' onPress={postImageApi(image)}/> : <View/>}
         {/* {image ? <Button title='navigate' onPress={() => navigation.navigate("Dashboard", {image: image})}/> : <View/>} */}
    </View>
   );
@@ -81,5 +80,4 @@ const styles = StyleSheet.create({
   }
 });
 
-// export default withNavigationFocus(CameraScreen2);
 export default CameraScreen2;

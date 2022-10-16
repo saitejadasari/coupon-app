@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import {View, Text, Image, FlatList, Button} from 'react-native';
+import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import insert_doc, { drop_db, get_query } from '../connections/query';
 import apiCalls from '../utils/apiCalls';
 
 
@@ -12,7 +13,8 @@ export default class DashboardScreen extends Component{
   }
 
   async componentDidMount(){
-    const apiData = await apiCalls();
+    // const apiData = insert_doc("Dummy", "coupon", "50% off")
+    const apiData = await get_query()
     console.log("api data", apiData);
     this.setState({apiData: apiData});
   }
@@ -23,7 +25,7 @@ export default class DashboardScreen extends Component{
     // console.log("Image", image);
     console.log("state", this.state);
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
         {/* {
           image ? <View style={{flex:1}}><Image source={{uri: image}} style={{flex:1}}/> </View>: 
           <View>
@@ -32,18 +34,33 @@ export default class DashboardScreen extends Component{
         } */}
         {/* {image && <Image source={{uri: image}} style={{flex:1}} />} */}
 
-        <View style={{ flex: 1, padding: 24 }}>
+        <View style={{ flex: 1, margin: 20 }}>
         <FlatList
           data={this.state.apiData}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
-            <Text>{item.title}, {item.releaseYear}</Text>
+            <View style={styles.card}>
+              <Text>{item.company_name}, {item.coupon_id}</Text>
+            </View>
           )}
         />
-      
     </View>
 
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  card: {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.26,
+    elevation: 8,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    margin: 10
+  }
+});
