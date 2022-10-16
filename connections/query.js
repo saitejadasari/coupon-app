@@ -57,3 +57,13 @@ export async function get_query(){
   console.log("returning data", rows);
   return rows;
 }
+
+export function drop_data(){
+  console.log("dropping data");
+  db.transaction(tx => {
+    tx.executeSql("delete from coupons where id>3", [],
+    (t, res) => console.log("drop db", t, res),
+    (t, err) => console.error("drop db", t, err))
+  }, (err) => console.error("err in tx", err),
+  (success) => console.log("success in tx", success));
+}

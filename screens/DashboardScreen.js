@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import {View, Text, Image, FlatList, StyleSheet} from 'react-native';
-import insert_doc, { drop_db, get_query } from '../connections/query';
+import insert_doc, { drop_data, drop_db, get_query } from '../connections/query';
 import apiCalls from '../utils/apiCalls';
 
 
@@ -15,6 +15,7 @@ export default class DashboardScreen extends Component{
   async componentDidMount(){
     // const apiData = insert_doc("Dummy", "coupon", "50% off")
     const apiData = await get_query()
+    // const apiData = drop_data()
     console.log("api data", apiData);
     this.setState({apiData: apiData});
   }

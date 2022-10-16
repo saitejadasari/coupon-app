@@ -11,6 +11,7 @@ function CameraScreen2({navigation}) {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const isFocused = useIsFocused()
+  const [appData, setAppData] = useState([]);
   console.log("focussed", isFocused);
   // console.log("image", image);
 
@@ -31,16 +32,12 @@ const takePicture = async () => {
 
 const postImageApi = (image) => {
   const apiData = postImage(image);
-  // let apiData={
-  //   "coupon_code": "ABCD",
-  //   "company": "ABC",
-  //   "text": "50% off"
-  // }
   console.log("api Data", image, apiData);
   const inserted = insert_doc(apiData.coupon_code, apiData.company, apiData.text);
-  console.log("Inserted", inserted);
+  setAppData(apiData);
+  // console.log("Inserted", inserted);
   // if(inserted){
-  //   navigation.navigate("Dashboard");
+    navigation.navigate("Dashboard");
   // }
 }
 
