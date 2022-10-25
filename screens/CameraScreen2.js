@@ -30,14 +30,20 @@ const takePicture = async () => {
     }
   }
 
-const postImageApi = (image) => {
-  const apiData = postImage(image);
+const postImageApi = async (image) => {
+  // const apiData = await postImage(image);
+  const apiData = {
+    coupon_code: "Test Dummy",
+    company: "Fake Co.",
+    text: "Desc"
+  }
   console.log("api Data", image, apiData);
-  const inserted = insert_doc(apiData.coupon_code, apiData.company, apiData.text);
-  setAppData(apiData);
+  const inserted = await insert_doc(apiData.coupon_code, apiData.company, apiData.text);
+  apiData.id = Math.floor(Math.random()*(2000+Math.ceil(Math.random())));
+  // setAppData(apiData);
   // console.log("Inserted", inserted);
   // if(inserted){
-    navigation.navigate("Dashboard");
+    navigation.navigate("Dashboard", {"apiData": apiData});
   // }
 }
 
