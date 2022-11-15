@@ -40,13 +40,21 @@ export default class DashboardScreen extends Component{
         {/* {image && <Image source={{uri: image}} style={{flex:1}} />} */}
 
         <View style={{ flex: 1, margin: 20 }}>
+      
         <FlatList
           data={newData}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
             <View style={styles.card} key={item.id}>
-              <Image source={{uri: item.image}} style={{flex:1}} />
-              <Text>{item.company_name}, {item.coupon_id}</Text>
+              {
+                item.image ?
+                <View style={{flex: 1}}>
+                  <Image source={{uri: item.image}} style={styles.image} />
+                </View> : null
+              }
+              <View style={{flex: 1}}>
+              <Text>{item.id}. {item.company_name}, {item.coupon_id}</Text>
+              </View>
             </View>
           )}
         />
@@ -68,5 +76,13 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     margin: 10
-  }
+  }, 
+  image: {
+    width:260,
+    height:300,
+    borderWidth:2,
+    borderColor:'#d35647',
+    resizeMode:'contain',
+    margin:8
+}
 });

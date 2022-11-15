@@ -4,10 +4,11 @@ import { Camera, CameraType } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import { postImage } from '../utils/apiCalls';
 import insert_doc from '../connections/query';
-
+import * as MediaLibrary from 'expo-media-library';
 
 function CameraScreen2({navigation}) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasMediaPermission, setHasMediaPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const isFocused = useIsFocused()
@@ -20,6 +21,9 @@ function CameraScreen2({navigation}) {
         const cameraStatus = await Camera.requestCameraPermissionsAsync();
         console.log("camera permissions", cameraStatus);
         setHasCameraPermission(cameraStatus.status === 'granted');
+        const mediaStatus = await MediaLibrary.requestPermissionsAsync();
+        console.log("media library permissions", mediaStatus);
+        setHasMediaPermission(mediaStatus.status === 'granted');
   })();
     }, []);
 
@@ -31,15 +35,25 @@ const takePicture = async () => {
   }
 
 const postImageApi = async (image) => {
+
+  // TODO - create a new album and add the photos in that album instead of Camera(default)
+  // if(await MediaLibrary.getAlbumAsync("Expo")){
+  //   const album = await MediaLibrary.createAlbumAsync("Expo", image);
+    
+  // }
+  const savedImage = await MediaLibrary.createAssetAsync(image);
+  console.log("Saved image in gallery", savedImage);
   // const apiData = await postImage(image);
   const apiData = {
     coupon_code: "Test Dummy",
     company: "Fake Co.",
-    text: "Desc"
+    text: "Desc",
+    image: savedImage.uri
   }
   console.log("api Data", image, apiData);
-  const inserted = await insert_doc(apiData.coupon_code, apiData.company, apiData.text);
+  const inserted = await insert_doc(apiData.coupon_code, apiData.company, apiData.text, savedImage.uri);
   apiData.id = Math.floor(Math.random()*(2000+Math.ceil(Math.random())));
+
   // setAppData(apiData);
   // console.log("Inserted", inserted);
   // if(inserted){
