@@ -16,15 +16,19 @@ export default class DashboardScreen extends Component{
     // const apiData = insert_doc("Dummy", "coupon", "50% off")
     const apiData = await get_query()
     // const apiData = drop_data()
+    // const apiData = drop_db()
     console.log("api data", apiData);
     this.setState({apiData: apiData});
   }
 
   render(){
-    // console.log("props", JSON.stringify(this.props));
-    // const image = this.props.route && this.props.route.params && this.props.route.params.image ? this.props.route.params.image : undefined;
+    const newData = this.state.apiData? this.state.apiData : [];
+    const apiData = this.props.route && this.props.route.params && this.props.route.params.apiData ? this.props.route.params.apiData : {};
+    apiData.id ? newData.push(apiData) : newData;
+    console.log("dashboard", apiData, newData);
+
     // console.log("Image", image);
-    console.log("state", this.state);
+    // console.log("state", this.state);
     return (
       <View style={{ flex: 1 }}>
         {/* {
@@ -36,12 +40,21 @@ export default class DashboardScreen extends Component{
         {/* {image && <Image source={{uri: image}} style={{flex:1}} />} */}
 
         <View style={{ flex: 1, margin: 20 }}>
+      
         <FlatList
-          data={this.state.apiData}
+          data={newData}
           keyExtractor={({ id }, index) => id}
           renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text>{item.company_name}, {item.coupon_id}</Text>
+            <View style={styles.card} key={item.id}>
+              {
+                item.image ?
+                <View style={{flex: 1}}>
+                  <Image source={{uri: item.image}} style={styles.image} />
+                </View> : null
+              }
+              <View style={{flex: 1}}>
+              <Text>{item.id}. {item.company_name}, {item.coupon_id}</Text>
+              </View>
             </View>
           )}
         />
@@ -63,5 +76,13 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     margin: 10
-  }
+  }, 
+  image: {
+    width:260,
+    height:300,
+    borderWidth:2,
+    borderColor:'#d35647',
+    resizeMode:'contain',
+    margin:8
+}
 });

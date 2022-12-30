@@ -12,7 +12,7 @@ async function getMovies(){
  return movies;
 }
 
-export function postImage(image){
+export async function postImage(image){
   console.log("preparing api request");
   let apiData = {}
 
@@ -28,7 +28,7 @@ export function postImage(image){
     type: img.type
 });
   try{
-    const resp = fetch('https://1496-131-123-49-7.ngrok.io/parse', 
+    const resp = fetch('https://5055-131-123-49-7.ngrok.io/parse', 
     {
       method: 'post',
       body: fdata,
@@ -43,6 +43,7 @@ export function postImage(image){
     }).catch(function(err){
       console.error("api error", err);
     })
+    return resp;
   } catch(error){
     console.error("error", error);
   }
