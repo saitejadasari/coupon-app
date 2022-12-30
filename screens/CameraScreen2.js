@@ -35,14 +35,30 @@ const takePicture = async () => {
   }
 
 const postImageApi = async (image) => {
-
+  console.log("Image ", image);
+  var savedImage = {};
   // TODO - create a new album and add the photos in that album instead of Camera(default)
-  // if(await MediaLibrary.getAlbumAsync("Expo")){
-  //   const album = await MediaLibrary.createAlbumAsync("Expo", image);
-    
-  // }
-  const savedImage = await MediaLibrary.createAssetAsync(image);
-  console.log("Saved image in gallery", savedImage);
+  var album = await MediaLibrary.getAlbumAsync("Expo");
+  var asset = await MediaLibrary.createAssetAsync(image);
+  console.log("Album res", album)
+  if(!album){
+    album = await MediaLibrary.createAlbumAsync("Expo", asset, false);    
+  } else {
+    const success = await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+    console.log("Image added to album", success);
+  }
+  console.log("Album", album, "asset", asset);
+
+  // Fetching the image from Album
+  const assetResult = await MediaLibrary.getAssetsAsync({
+    first: 1,
+    album: album,
+    sortBy: MediaLibrary.SortBy.creationTime,
+  });
+
+  savedImage = await assetResult.assets[0];
+  // const savedImage = await MediaLibrary.createAssetAsync(image);
+  console.log("Saved image in gallery", savedImage.uri);
   // const apiData = await postImage(image);
   const apiData = {
     coupon_code: "Test Dummy",
